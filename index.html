@@ -1,14 +1,14 @@
+
 <!doctype html>
 <html lang="es">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Spin the Wheel</title>
+  <title>Ruleta</title>
   <style>
     :root{
       --pink:#ff2f92;
       --pink2:#ff6fb1;
-      --pink3:#ffd1e6;
       --bg1:#ff9acb;
       --bg2:#ff5fa2;
       --card:#ffffff;
@@ -64,9 +64,8 @@
       color:var(--muted);
       font-size:13px;
     }
-    .row{display:grid; grid-template-columns:1fr 1fr; gap:10px;}
     label{display:block; font-size:12px; color:var(--muted); margin:10px 0 6px;}
-    input[type="text"], input[type="number"]{
+    input[type="text"]{
       width:100%;
       padding:10px 12px;
       border-radius:12px;
@@ -76,29 +75,22 @@
       font-size:14px;
     }
     input[type="text"]::placeholder{color:#aaa;}
-    .btns{display:flex; gap:10px; flex-wrap:wrap; margin-top:12px;}
+
     button{
-      border:1px solid rgba(0,0,0,.10);
-      background:#fff;
-      color:var(--text);
-      padding:10px 12px;
-      border-radius:14px;
+      width:100%;
+      border:1px solid rgba(255,47,146,.35);
+      background: linear-gradient(180deg, var(--pink), #ff3ea0);
+      color:#fff;
+      padding:12px 14px;
+      border-radius:18px;
       cursor:pointer;
-      font-weight:800;
-      transition:transform .05s ease, filter .15s ease, background .15s ease;
+      font-weight:900;
+      font-size:18px;
+      transition:transform .05s ease, filter .15s ease;
+      margin-top:14px;
     }
     button:hover{filter:brightness(.98)}
     button:active{transform:translateY(1px)}
-    button.primary{
-      background: linear-gradient(180deg, var(--pink), #ff3ea0);
-      color:#fff;
-      border-color: rgba(255,47,146,.35);
-    }
-    button.danger{
-      background: rgba(255,47,146,.10);
-      border-color: rgba(255,47,146,.35);
-      color: var(--pink);
-    }
     button:disabled{opacity:.55; cursor:not-allowed}
 
     .wheelArea{
@@ -137,11 +129,7 @@
       border-bottom:30px solid #111;
       filter: drop-shadow(0 8px 14px rgba(0,0,0,.35));
     }
-    .centerNote{
-      margin-top:6px;
-      font-size:13px;
-      color:var(--muted);
-    }
+
     .result{
       width:min(520px, 95%);
       background:#fff;
@@ -152,8 +140,10 @@
       box-shadow: 0 12px 35px rgba(0,0,0,.10);
       font-size:14px;
       line-height:1.35;
+      text-align:left;
     }
     .result strong{color:var(--pink)}
+    .small{color:var(--muted); font-size:12px;}
     .warn{
       color:#111;
       background: rgba(255,209,230,.75);
@@ -166,25 +156,26 @@
     }
     .warn.show{display:block;}
 
-    table{
-      width:100%;
-      border-collapse:collapse;
-      font-size:12px;
+    .prizeList{
+      margin:10px 0 0;
+      padding:0;
+      list-style:none;
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:10px;
     }
-    th, td{
-      padding:10px 10px;
-      border-bottom:1px solid rgba(0,0,0,.06);
-      vertical-align:top;
+    .prizeItem{
+      background:#fff;
+      border:1px solid rgba(0,0,0,.08);
+      border-radius:14px;
+      padding:10px 12px;
+      font-size:14px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
     }
-    th{
-      text-align:left;
-      color:var(--muted);
-      font-size:11px;
-      text-transform:uppercase;
-      letter-spacing:.6px;
-      background: rgba(255,209,230,.35);
-    }
-    tr:last-child td{border-bottom:none;}
+    .prizeItem b{color:#111}
     .pill{
       display:inline-block;
       padding:2px 8px;
@@ -192,66 +183,45 @@
       background: rgba(255,47,146,.10);
       border:1px solid rgba(255,47,146,.20);
       color: var(--pink);
-      font-weight:800;
+      font-weight:900;
+      font-size:12px;
+      white-space:nowrap;
     }
-    .small{color:var(--muted); font-size:12px;}
   </style>
 </head>
 <body>
   <div class="app">
-    <!-- Left: Controls -->
+    <!-- Left: Inputs + fixed prizes -->
     <div class="card">
       <div class="title">
-        <h1>💖 SPIN THE WHEEL</h1>
+        <h1>💖 SPIN MY WHEEL</h1>
         <span class="pill" id="modelBadge">Modelo</span>
       </div>
       <div class="subtitle">
-        Tip <strong>$<span id="tipLabel">10</span></strong> to spin the wheel · 8 premios · historial guardado
+        Ruleta con 8 premios · el fan no puede editar nada
       </div>
 
       <div class="pad">
-        <div class="row">
-          <div>
-            <label>Nombre del fan (obligatorio)</label>
-            <input id="fanName" type="text" placeholder="Ej: Juan Pérez" />
-          </div>
-          <div>
-            <label>Nombre del modelo</label>
-            <input id="modelName" type="text" placeholder="Ej: Iliana" />
-          </div>
-        </div>
+        <label>Nombre del fan (obligatorio)</label>
+        <input id="fanName" type="text" placeholder="Ej: Juan Pérez" />
 
-        <div class="row">
-          <div>
-            <label>Precio (solo visual)</label>
-            <input id="tipAmount" type="number" min="0" step="1" value="10" />
-          </div>
-          <div>
-            <label>Nota (opcional)</label>
-            <input id="note" type="text" placeholder="Ej: Promo navideña" />
-          </div>
-        </div>
+        <label>Nombre del modelo (obligatorio)</label>
+        <input id="modelName" type="text" placeholder="Ej: Iliana" />
 
-        <label>Premios (edítalos aquí)</label>
-        <div class="row" id="prizeInputs"></div>
+        <div class="warn" id="warnBox">⚠️ Completa el nombre del fan y el del modelo antes de girar.</div>
 
-        <div class="btns">
-          <button class="primary" id="spinBtn">🎯 SPIN</button>
-          <button id="saveBtn">💾 Guardar</button>
-          <button id="exportBtn">⬇️ CSV</button>
-          <button class="danger" id="clearBtn">🗑️ Borrar historial</button>
-        
-          <button id="testTgBtn">🧪 Probar Telegram</button>
-</div>
+        <button id="spinBtn">🎡 Girar y enviar</button>
 
-        <div class="warn" id="warnBox">⚠️ Escribe el nombre del fan antes de girar.</div>
-        <div class="small" style="margin-top:10px;">
-          *El historial se guarda en este dispositivo. Si usas otro celular/PC, no se transfiere.
+        <label style="margin-top:18px;">Premios</label>
+        <ul class="prizeList" id="prizeList"></ul>
+
+        <div class="small" style="margin-top:12px;">
+          *Al terminar el giro, el resultado se envía automáticamente al grupo de Telegram.
         </div>
       </div>
     </div>
 
-    <!-- Right: Wheel + History -->
+    <!-- Right: Wheel + Result -->
     <div class="card">
       <div class="wheelArea">
         <div class="wheelBox">
@@ -259,32 +229,9 @@
           <canvas id="wheel" width="800" height="800"></canvas>
         </div>
 
-        <button class="primary" id="spinBtn2" style="width:min(320px,90%); font-size:18px; padding:12px 14px; border-radius:18px;">
-          SPIN
-        </button>
-        <div class="centerNote">Escribe el nombre → gira → captura y envía al fan.</div>
-
         <div class="result" id="resultBox">
           Resultado: <strong>—</strong><br/>
-          <span class="small">Listo para jugar.</span>
-        </div>
-      </div>
-
-      <div class="pad" style="padding-top:0;">
-        <div class="small" style="margin:0 0 8px;">Historial</div>
-        <div style="overflow:auto; border-radius:16px; border:1px solid rgba(0,0,0,.06); background:#fff;">
-          <table>
-            <thead>
-              <tr>
-                <th>#</th>
-                <th>Fecha</th>
-                <th>Fan</th>
-                <th>Modelo</th>
-                <th>Premio</th>
-              </tr>
-            </thead>
-            <tbody id="historyBody"></tbody>
-          </table>
+          <span class="small">Escribe los nombres y gira.</span>
         </div>
       </div>
     </div>
@@ -294,54 +241,54 @@
   // ====== CONFIG ======
   const TELEGRAM_ENDPOINT = "https://ruleta-modelo.vercel.app/api/telegram";
 
-// ===== Storage keys (separar por modelo) =====
-  const KEY_CFG = "wheel_cfg_v2";
-  const KEY_HIST_PREFIX = "wheel_hist_model_";
+  // Premios fijos (solo enumerados + emoji provocativo)
+  const PRIZES = [
+    "Premio 1 😈",
+    "Premio 2 🔥",
+    "Premio 3 💦",
+    "Premio 4 🍑",
+    "Premio 5 😏",
+    "Premio 6 👅",
+    "Premio 7 💋",
+    "Premio 8 🎁"
+  ];
 
-  const DEFAULT_CFG = {
-    tip: 10,
-    model: "Modelo",
-    prizes: [
-      "Custom",
-      "Nude Bundle",
-      "Private Show",
-      "Tease Video",
-      "2 Solos",
-      "Surprise 🎁",
-      "VIP Pic Set",
-      "Mystery Spin ✨"
-    ]
-  };
-
-  // ===== Load config =====
-  const cfg = loadCfg();
-
-  // DOM
+  // ===== DOM =====
   const canvas = document.getElementById("wheel");
   const ctx = canvas.getContext("2d");
+
   const fanName = document.getElementById("fanName");
   const modelName = document.getElementById("modelName");
-  const tipAmount = document.getElementById("tipAmount");
-  const note = document.getElementById("note");
-
-  const prizeInputs = document.getElementById("prizeInputs");
-  const tipLabel = document.getElementById("tipLabel");
   const modelBadge = document.getElementById("modelBadge");
+
+  const prizeList = document.getElementById("prizeList");
   const resultBox = document.getElementById("resultBox");
-  const historyBody = document.getElementById("historyBody");
   const warnBox = document.getElementById("warnBox");
-
   const spinBtn = document.getElementById("spinBtn");
-  const spinBtn2 = document.getElementById("spinBtn2");
-  const saveBtn = document.getElementById("saveBtn");
-  const exportBtn = document.getElementById("exportBtn");
-  const clearBtn = document.getElementById("clearBtn");
 
-  
+  // ===== State =====
+  let rotation = 0;      // radians
+  let spinning = false;
 
-  const testTgBtn = document.getElementById("testTgBtn");
+  // Init
+  renderPrizeList();
+  drawWheel();
+  modelName.addEventListener("input", () => {
+    modelBadge.textContent = (modelName.value || "").trim() || "Modelo";
+  });
 
-  // ====== Telegram sender ======
+  spinBtn.addEventListener("click", () => spin());
+
+  function renderPrizeList(){
+    prizeList.innerHTML = "";
+    PRIZES.forEach((p, idx) => {
+      const li = document.createElement("li");
+      li.className = "prizeItem";
+      li.innerHTML = `<b>${escapeHtml(p)}</b><span class="pill">${idx+1}/8</span>`;
+      prizeList.appendChild(li);
+    });
+  }
+
   async function sendToTelegram(record){
     try{
       const r = await fetch(TELEGRAM_ENDPOINT, {
@@ -356,7 +303,6 @@
         })
       });
 
-      // Si falla, mostramos el error en el cuadro de resultado (para depurar rápido)
       if (!r.ok){
         const t = await r.text();
         console.error("Telegram endpoint error:", r.status, t);
@@ -366,132 +312,22 @@
     }
   }
 
-  // Botón de prueba (sin consola)
-  if (testTgBtn){
-    testTgBtn.addEventListener("click", async () => {
-      const payload = {
-        fan: "TEST",
-        model: (modelName.value || "Modelo").trim() || "Modelo",
-        prize: "TESTPRIZE",
-        datetime: new Date().toLocaleString(),
-        note: "Prueba manual desde la web"
-      };
-
-      resultBox.innerHTML = `Probando Telegram... <br><span class="small">Enviando mensaje de prueba</span>`;
-
-      try {
-        const r = await fetch(TELEGRAM_ENDPOINT, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(payload),
-        });
-
-        const text = await r.text();
-        resultBox.innerHTML =
-          `Respuesta endpoint: <strong>${r.status}</strong><br><span class="small">${escapeHtml(text)}</span>`;
-      } catch (e) {
-        resultBox.innerHTML =
-          `Error de red: <strong>no se pudo conectar</strong><br><span class="small">${escapeHtml(String(e))}</span>`;
-      }
-    });
-  }
-
-// State
-  let rotation = 0;      // radians
-  let spinning = false;
-
-  // Init UI
-  modelName.value = cfg.model;
-  tipAmount.value = cfg.tip;
-  tipLabel.textContent = cfg.tip;
-  modelBadge.textContent = cfg.model;
-
-  renderPrizeInputs(cfg.prizes);
-  drawWheel();
-  renderHistory();
-
-  // ===== Events =====
-  tipAmount.addEventListener("input", () => {
-    const v = Math.max(0, Number(tipAmount.value || 0));
-    tipLabel.textContent = String(v);
-  });
-
-  modelName.addEventListener("input", () => {
-    modelBadge.textContent = modelName.value.trim() || "Modelo";
-    renderHistory();
-  });
-
-  saveBtn.addEventListener("click", () => {
-    const prizes = [...document.querySelectorAll(".prizeInput")]
-      .map(i => (i.value || "").trim())
-      .slice(0, 8);
-
-    if (prizes.some(p => !p)) {
-      alert("Completa los 8 premios (no pueden quedar vacíos).");
-      return;
-    }
-
-    const model = (modelName.value || "").trim() || "Modelo";
-    const tip = Math.max(0, Number(tipAmount.value || 0));
-
-    const newCfg = { model, tip, prizes };
-    localStorage.setItem(KEY_CFG, JSON.stringify(newCfg));
-
-    tipLabel.textContent = String(tip);
-    modelBadge.textContent = model;
-
-    // Redraw wheel with new prizes
-    cfg.model = model;
-    cfg.tip = tip;
-    cfg.prizes = prizes;
-
-    drawWheel();
-    renderHistory();
-    alert("Guardado ✅");
-  });
-
-  clearBtn.addEventListener("click", () => {
-    const model = (modelName.value || "").trim() || "Modelo";
-    if (!confirm(`¿Borrar historial del modelo "${model}"?`)) return;
-    localStorage.removeItem(KEY_HIST_PREFIX + safeKey(model));
-    renderHistory();
-    resultBox.innerHTML = `Resultado: <strong>—</strong><br/><span class="small">Historial borrado.</span>`;
-
-        // ✅ Enviar a Telegram
-        sendToTelegram(record);
-  });
-
-  exportBtn.addEventListener("click", () => {
-    const model = (modelName.value || "").trim() || "Modelo";
-    const hist = loadHistory(model);
-    const csv = toCSV(hist);
-    downloadCSV(csv, `historial_${safeKey(model)}.csv`);
-  });
-
-  [spinBtn, spinBtn2].forEach(btn => btn.addEventListener("click", () => spin()));
-
   function spin(){
     if (spinning) return;
 
     const fan = (fanName.value || "").trim();
-    if (!fan){
+    const model = (modelName.value || "").trim();
+
+    if (!fan || !model){
       warnBox.classList.add("show");
-      fanName.focus();
+      if (!fan) fanName.focus();
+      else modelName.focus();
       return;
     }
     warnBox.classList.remove("show");
 
-    const model = (modelName.value || "").trim() || "Modelo";
-    const prizes = [...document.querySelectorAll(".prizeInput")].map(i => (i.value||"").trim());
-
-    if (prizes.length !== 8 || prizes.some(p => !p)) {
-      alert("Revisa los 8 premios antes de girar.");
-      return;
-    }
-
     spinning = true;
     spinBtn.disabled = true;
-    spinBtn2.disabled = true;
 
     // Animate: 4-7 turns + random
     const fullTurns = randInt(4, 7);
@@ -506,37 +342,35 @@
     function frame(now){
       const t = Math.min(1, (now - t0) / duration);
       rotation = startRot + (endRot - startRot) * easeOutCubic(t);
-      drawWheel(prizes);
+      drawWheel();
 
       if (t < 1) requestAnimationFrame(frame);
       else {
         rotation = endRot;
-        drawWheel(prizes);
+        drawWheel();
 
-        const winIdx = getWinnerIndex(prizes.length);
-        const winText = prizes[winIdx];
+        const winIdx = getWinnerIndex(PRIZES.length);
+        const winText = PRIZES[winIdx];
 
         const stamp = new Date().toLocaleString();
-        const record = { datetime: stamp, fan, model, prize: winText, note: (note.value||"").trim() };
-
-        saveHistory(model, record);
-        renderHistory();
+        const record = { datetime: stamp, fan, model, prize: winText, note: "" };
 
         resultBox.innerHTML =
           `Resultado: <strong>${escapeHtml(winText)}</strong><br/>
            <span class="small">Fan: ${escapeHtml(fan)} · Modelo: ${escapeHtml(model)} · ${escapeHtml(stamp)}</span>`;
 
+        // ✅ Enviar a Telegram automáticamente
+        sendToTelegram(record);
+
         spinning = false;
         spinBtn.disabled = false;
-        spinBtn2.disabled = false;
       }
     }
     requestAnimationFrame(frame);
   }
 
   // ===== Wheel drawing =====
-  function drawWheel(prizesOverride){
-    const prizes = prizesOverride || cfg.prizes;
+  function drawWheel(){
     const W = canvas.width, H = canvas.height;
     const cx = W/2, cy = H/2;
     const radius = Math.min(W,H) * 0.43;
@@ -551,7 +385,7 @@
     ctx.fillStyle = "rgba(255,255,255,0.28)";
     ctx.fill();
 
-    const n = prizes.length;
+    const n = PRIZES.length;
     const slice = (Math.PI*2)/n;
 
     for(let i=0;i<n;i++){
@@ -571,14 +405,14 @@
       ctx.lineWidth = 4;
       ctx.stroke();
 
-      // label
+      // label (solo 1-8)
       const mid = (start+end)/2;
       ctx.save();
       ctx.rotate(mid);
       ctx.textAlign = "right";
       ctx.fillStyle = "rgba(255,255,255,0.98)";
-      ctx.font = "900 30px Arial";
-      ctx.fillText(truncate(prizes[i], 18), radius - 18, 10);
+      ctx.font = "900 44px Arial";
+      ctx.fillText(String(i+1), radius - 18, 16);
       ctx.restore();
     }
 
@@ -608,135 +442,8 @@
     return Math.floor(a / slice);
   }
 
-  // ===== Prize inputs =====
-  function renderPrizeInputs(prizes){
-    prizeInputs.innerHTML = "";
-    for (let i=0;i<8;i++){
-      const wrap = document.createElement("div");
-      wrap.style.display = "flex";
-      wrap.style.flexDirection = "column";
-
-      const lab = document.createElement("label");
-      lab.textContent = `Premio ${i+1}`;
-
-      const inp = document.createElement("input");
-      inp.type = "text";
-      inp.className = "prizeInput";
-      inp.value = prizes[i] || `Premio ${i+1}`;
-
-      wrap.appendChild(lab);
-      wrap.appendChild(inp);
-      prizeInputs.appendChild(wrap);
-    }
-  }
-
-  // ===== History =====
-  function renderHistory(){
-    const model = (modelName.value || "").trim() || "Modelo";
-    const hist = loadHistory(model);
-
-    historyBody.innerHTML = "";
-    if (hist.length === 0){
-      const tr = document.createElement("tr");
-      const td = document.createElement("td");
-      td.colSpan = 5;
-      td.className = "small";
-      td.textContent = "Aún no hay giros registrados para este modelo.";
-      tr.appendChild(td);
-      historyBody.appendChild(tr);
-      return;
-    }
-
-    // latest first
-    const rows = [...hist].reverse();
-    rows.forEach((h, idx) => {
-      const tr = document.createElement("tr");
-      tr.innerHTML = `
-        <td><span class="pill">${rows.length - idx}</span></td>
-        <td>${escapeHtml(h.datetime)}</td>
-        <td>${escapeHtml(h.fan)}</td>
-        <td>${escapeHtml(h.model)}</td>
-        <td><strong>${escapeHtml(h.prize)}</strong></td>
-      `;
-      historyBody.appendChild(tr);
-    });
-  }
-
-  function saveHistory(model, record){
-    const key = KEY_HIST_PREFIX + safeKey(model);
-    const hist = JSON.parse(localStorage.getItem(key) || "[]");
-    hist.push(record);
-    localStorage.setItem(key, JSON.stringify(hist));
-  }
-
-  function loadHistory(model){
-    const key = KEY_HIST_PREFIX + safeKey(model);
-    try{
-      const raw = localStorage.getItem(key);
-      if (!raw) return [];
-      const parsed = JSON.parse(raw);
-      return Array.isArray(parsed) ? parsed : [];
-    }catch{
-      return [];
-    }
-  }
-
-  function loadCfg(){
-    try{
-      const raw = localStorage.getItem(KEY_CFG);
-      if (!raw) return structuredClone(DEFAULT_CFG);
-      const parsed = JSON.parse(raw);
-      if (!parsed || !Array.isArray(parsed.prizes) || parsed.prizes.length !== 8) return structuredClone(DEFAULT_CFG);
-      return {
-        model: String(parsed.model || DEFAULT_CFG.model),
-        tip: Number(parsed.tip ?? DEFAULT_CFG.tip),
-        prizes: parsed.prizes.map(x => String(x))
-      };
-    }catch{
-      return structuredClone(DEFAULT_CFG);
-    }
-  }
-
-  // ===== CSV =====
-  function toCSV(hist){
-    const header = ["Giro","FechaHora","Fan","Modelo","Premio","Nota"];
-    const lines = [header.join(",")];
-    hist.forEach((h, i) => {
-      lines.push([
-        i+1,
-        csvSafe(h.datetime),
-        csvSafe(h.fan),
-        csvSafe(h.model),
-        csvSafe(h.prize),
-        csvSafe(h.note || "")
-      ].join(","));
-    });
-    return lines.join("\n");
-  }
-
-  function downloadCSV(csv, filename){
-    const blob = new Blob([csv], {type:"text/csv;charset=utf-8;"});
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = filename;
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
-    URL.revokeObjectURL(url);
-  }
-
-  function csvSafe(v){
-    const s = String(v ?? "");
-    const needs = /[",\n]/.test(s);
-    const escaped = s.replace(/"/g,'""');
-    return needs ? `"${escaped}"` : escaped;
-  }
-
   // ===== Utils =====
   function randInt(min, max){ return Math.floor(Math.random()*(max-min+1))+min; }
-  function truncate(s, n){ s=String(s??""); return s.length<=n ? s : s.slice(0,n-1)+"…"; }
-  function safeKey(s){ return String(s).toLowerCase().replace(/[^a-z0-9]+/g,"_").slice(0,60) || "modelo"; }
   function escapeHtml(str){
     return String(str).replace(/[&<>"']/g, m => ({
       "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
