@@ -240,7 +240,9 @@
           <button id="saveBtn">💾 Guardar</button>
           <button id="exportBtn">⬇️ CSV</button>
           <button class="danger" id="clearBtn">🗑️ Borrar historial</button>
-        </div>
+        
+          <button id="testTgBtn">🧪 Probar Telegram</button>
+</div>
 
         <div class="warn" id="warnBox">⚠️ Escribe el nombre del fan antes de girar.</div>
         <div class="small" style="margin-top:10px;">
@@ -289,7 +291,10 @@
   </div>
 
 <script>
-  // ===== Storage keys (separar por modelo) =====
+  // ====== CONFIG ======
+  const TELEGRAM_ENDPOINT = "https://ruleta-modelo.vercel.app/api/telegram";
+
+// ===== Storage keys (separar por modelo) =====
   const KEY_CFG = "wheel_cfg_v2";
   const KEY_HIST_PREFIX = "wheel_hist_model_";
 
@@ -332,7 +337,66 @@
   const exportBtn = document.getElementById("exportBtn");
   const clearBtn = document.getElementById("clearBtn");
 
-  // State
+  
+
+  const testTgBtn = document.getElementById("testTgBtn");
+
+  // ====== Telegram sender ======
+  async function sendToTelegram(record){
+    try{
+      const r = await fetch(TELEGRAM_ENDPOINT, {
+        method: "POST",
+        headers: {"Content-Type":"application/json"},
+        body: JSON.stringify({
+          fan: record.fan,
+          model: record.model,
+          prize: record.prize,
+          datetime: record.datetime,
+          note: record.note || ""
+        })
+      });
+
+      // Si falla, mostramos el error en el cuadro de resultado (para depurar rápido)
+      if (!r.ok){
+        const t = await r.text();
+        console.error("Telegram endpoint error:", r.status, t);
+      }
+    }catch(e){
+      console.error("No se pudo enviar a Telegram:", e);
+    }
+  }
+
+  // Botón de prueba (sin consola)
+  if (testTgBtn){
+    testTgBtn.addEventListener("click", async () => {
+      const payload = {
+        fan: "TEST",
+        model: (modelName.value || "Modelo").trim() || "Modelo",
+        prize: "TESTPRIZE",
+        datetime: new Date().toLocaleString(),
+        note: "Prueba manual desde la web"
+      };
+
+      resultBox.innerHTML = `Probando Telegram... <br><span class="small">Enviando mensaje de prueba</span>`;
+
+      try {
+        const r = await fetch(TELEGRAM_ENDPOINT, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        });
+
+        const text = await r.text();
+        resultBox.innerHTML =
+          `Respuesta endpoint: <strong>${r.status}</strong><br><span class="small">${escapeHtml(text)}</span>`;
+      } catch (e) {
+        resultBox.innerHTML =
+          `Error de red: <strong>no se pudo conectar</strong><br><span class="small">${escapeHtml(String(e))}</span>`;
+      }
+    });
+  }
+
+// State
   let rotation = 0;      // radians
   let spinning = false;
 
@@ -392,6 +456,9 @@
     localStorage.removeItem(KEY_HIST_PREFIX + safeKey(model));
     renderHistory();
     resultBox.innerHTML = `Resultado: <strong>—</strong><br/><span class="small">Historial borrado.</span>`;
+
+        // ✅ Enviar a Telegram
+        sendToTelegram(record);
   });
 
   exportBtn.addEventListener("click", () => {
@@ -678,4 +745,3 @@
 </script>
 </body>
 </html>
-
